@@ -1,13 +1,14 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'order_book_entry.dart';
 
-class OrderBookState {
-  final List<OrderBookEntry> buys;
-  final List<OrderBookEntry> sells;
+part 'order_book_state.freezed.dart';
 
-  const OrderBookState({
-    required this.buys,
-    required this.sells,
-  });
+@freezed
+class OrderBookState with _$OrderBookState {
+  const factory OrderBookState({
+    required List<OrderBookEntry> buys,
+    required List<OrderBookEntry> sells,
+  }) = _OrderBookState;
 
   factory OrderBookState.empty() =>
       const OrderBookState(buys: [], sells: []);

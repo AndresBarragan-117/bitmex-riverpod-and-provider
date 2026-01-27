@@ -1,19 +1,16 @@
-class OrderBookEntry {
-  final double price;
-  final double size;
-  final bool isBuy;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  const OrderBookEntry({
-    required this.price,
-    required this.size,
-    required this.isBuy,
-  });
+part 'order_book_entry.freezed.dart';
+part 'order_book_entry.g.dart';
 
-  OrderBookEntry copyWith({double? size}) {
-    return OrderBookEntry(
-      price: price,
-      size: size ?? this.size,
-      isBuy: isBuy,
-    );
-  }
+@freezed
+class OrderBookEntry with _$OrderBookEntry {
+  const factory OrderBookEntry({
+    required double price,
+    required double size,
+    required bool isBuy,
+  }) = _OrderBookEntry;
+
+  factory OrderBookEntry.fromJson(Map<String, dynamic> json) =>
+      _$OrderBookEntryFromJson(json);
 }
