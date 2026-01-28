@@ -1,16 +1,16 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 
-part 'order_book_entry.freezed.dart';
-part 'order_book_entry.g.dart';
+part 'order_book_entry.mapper.dart';
 
-@freezed
-class OrderBookEntry with _$OrderBookEntry {
-  const factory OrderBookEntry({
-    required double price,
-    required double size,
-    required bool isBuy,
-  }) = _OrderBookEntry;
+@MappableClass()
+class OrderBookEntry with OrderBookEntryMappable {
+  final double price;
+  final double size;
+  final bool isBuy;
 
-  factory OrderBookEntry.fromJson(Map<String, dynamic> json) =>
-      _$OrderBookEntryFromJson(json);
+  const OrderBookEntry({
+    required this.price,
+    required this.size,
+    required this.isBuy,
+  });
 }

@@ -1,14 +1,17 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'order_book_entry.dart';
 
-part 'order_book_state.freezed.dart';
+part 'order_book_state.mapper.dart';
 
-@freezed
-class OrderBookState with _$OrderBookState {
-  const factory OrderBookState({
-    required List<OrderBookEntry> buys,
-    required List<OrderBookEntry> sells,
-  }) = _OrderBookState;
+@MappableClass()
+class OrderBookState with OrderBookStateMappable {
+  final List<OrderBookEntry> buys;
+  final List<OrderBookEntry> sells;
+
+  const OrderBookState({
+    required this.buys,
+    required this.sells,
+  });
 
   factory OrderBookState.empty() =>
       const OrderBookState(buys: [], sells: []);

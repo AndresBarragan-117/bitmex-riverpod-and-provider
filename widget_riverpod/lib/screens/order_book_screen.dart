@@ -12,54 +12,24 @@ class OrderBookScreen extends ConsumerWidget {
     final state = ref.watch(orderBookRiverpod);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('BitMEX -> XBTUSD')),
-      body: Row(
-        children: [
-          _buildColumn('BUY', state.buys, Colors.green),
-          _buildColumn('SELL', state.sells, Colors.red),
-        ],
+      appBar: AppBar(
+        title: const Text('BitMEX → XBTUSD'),
+        centerTitle: true,
       ),
-    );
-  }
-
-  Widget _buildColumn(
-    String title,
-    List<OrderBookEntry> orders,
-    Color color,
-  ) {
-    return Expanded(
-      child: Column(
+      body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Text(
-              title,
-              style: TextStyle(
-                color: color,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+          _buildHeader(),
+          const Divider(height: 1),
           Expanded(
             child: ListView.builder(
-              itemCount: orders.length,
+              itemCount: _maxLen(state.buys, state.sells),
               itemBuilder: (_, index) {
-                final order = orders[index];
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        order.price.toStringAsFixed(1),
-                        style: TextStyle(color: color),
-                      ),
-                      Text(order.size.toStringAsFixed(0)),
-                    ],
-                  ),
-                );
+                final buy =
+                    index < state.buys.length ? state.buys[index] : null;
+                final sell =
+                    index < state.sells.length ? state.sells[index] : null;
+
+                return _buildRow(buy, sell);
               },
             ),
           ),
@@ -67,4 +37,98 @@ class OrderBookScreen extends ConsumerWidget {
       ),
     );
   }
+
+  Widget _buildHeader() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      child: Row(
+        children: const [
+          Expanded(
+            child: Text(
+              'Size',
+              textAlign: TextAlign.right,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              'BUY',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.green,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              'SELL',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              'Size',
+              textAlign: TextAlign.left,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRow(
+    OrderBookEntry? buy,
+    OrderBookEntry? sell,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              buy != null ? buy.size.toStringAsFixed(0) : '',
+              textAlign: TextAlign.right,
+              style: const TextStyle(color: Colors.black),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              buy?.price.toStringAsFixed(1) ?? '',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.green,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              sell?.price.toStringAsFixed(1) ?? '',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.red,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              sell != null ? sell.size.toStringAsFixed(0) : '',
+              textAlign: TextAlign.left,
+              style: const TextStyle(color: Colors.black),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  int _maxLen(List a, List b) =>
+      a.length > b.length ? a.length : b.length;
 }
